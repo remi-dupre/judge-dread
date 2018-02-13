@@ -1,3 +1,8 @@
+# Data files
+db.sqlite3
+
+# Python's cache
+**/__pycache__
+
 # Setuptools outputs
 judge_dread.egg-info
-
