@@ -85,16 +85,11 @@ class Attachment(models.Model):
     description = models.CharField(max_length=255, blank=True)
     # The content of the attachment
     def file_path(instance, filename):
-        return 'attachments/%s/%s' % (instance.problem.name, instance.name)
+        return 'attachments/%s/%s' % (instance.problem_description, instance.name)
     file = models.FileField(upload_to=file_path)
 
     def __str__(self):
-        ret = '%s > %s' % (self.problem.name, self.name)
-
-        if language is not None:
-            ret += ' (%s)' % self.language
-
-        return ret
+        return '%s > %s' % (self.problem_description, self.name)
 
     class Meta:
         unique_together = ('problem_description', 'name')
