@@ -103,6 +103,11 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Media files configuration
+MEDIA_ROOT = 'db_files/'
+MEDIA_URL = '/media/'
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 

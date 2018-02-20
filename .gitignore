@@ -1,5 +1,6 @@
 # Data files
 db.sqlite3
+db_files
 
 # Python's cache
 __pycache__
