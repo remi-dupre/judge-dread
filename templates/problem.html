@@ -13,7 +13,7 @@
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="#" style="font-size: 40px; font-family: 'Gloria Hallelujah', cursive">
-        <img src="../../static/logo/logo.svg" width="80" height="140">
+        <img src="../static/logo/logo.svg" width="80" height="140">
         Judge Dread
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,20 +28,12 @@
           <li class="nav-item">
             <a class="nav-link" href="#">Tasks list</a>
           </li>
-          <!-- <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Dropdown
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </div>
+          <li>
+            <a class="nav-link" href="#">About us</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" href="#">Disabled</a>
-          </li>-->
+          <li>
+            <a class="nav-link" href="#">Connexion</a>
+          </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
@@ -68,17 +60,40 @@
       <br />
     </div>
 
-    <!-- Input and Output -->
+    <!-- Input Format -->
+    <div class="container">
+      <h3>Input Format</h3>
+      <p> The first line of the standard input contains two integers and (). The second line contains integers , forming a permutation of the numbers . That is, and for . The third line contains integers - the heights of the buildings ( for ). All the numbers are different. In each line the integers are separated by single spaces. </p>
+      <p> Additionally, in test cases worth at least 35 points, and , whereas in test cases worth at least 60 points, and .</p>
+    </div>
+
+    <!-- Output Format -->
+    <div class="container">
+      <h3>Output Format</h3>
+      <p> The first line of the standard output should contain an integer , the number of matches. The second line should contain integers - 1-based indices of buildings which correspond to the stripe number 1 from the logo in a proper match. The numbers should be listed in an increasing order and separated by single spaces. If , your program should print an empty second line. </p>
+    </div>
+
+    <!-- Input Constraint -->
+    <div class="container">
+      <h3>Input Constraints</h3>
+      <ul>
+        <li> 2 &le; n &le; m </li>
+        <li> 1 &le; hi &le; 10⁹ for 1 &le; i &le; n </li>
+      </ul>
+    </div>
+
+    <!-- Input and Output Example-->
 
     <div class="container">
+      <br />
+      <h3>Example</h3>
+
       <div class="row">
         <div class="col">
           <div class="card">
             <div class="card-body">
               <h5 class="card-title"> Input </h5>
-              <p class="card-text">  5 10
-                2 1 5 3 4
-                5 6 3 8 12 7 1 10 11 9  <!-- {{output example}} --> </p>
+              <p class="card-text">  5 10 <br/> 2 1 5 3 4 <br/>  5 6 3 8 12 7 1 10 11 9  <!-- input example --> </p>
             </div>
           </div>
         </div>
@@ -87,8 +102,7 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title"> Output </h5>
-              <p class="card-text"> 2
-2 6 <!-- {{output example}} --> </p>
+              <p class="card-text"> 2 <br/> 2 6 <!-- output example --> </p>
             </div>
           </div>
         </div>
@@ -96,7 +110,7 @@
 
       <br />
       <p class="lead">
-        <!--{{Comment on the example}}-->
+        <!--Comment on the example-->
          Both the sequences (6,3,8,12,7) and (7,1,10,11,9) match the logo described by the permutation (2,1,5,3,4). In particular, in the first sequence the building number (of height ) is the shortest one, the building number (of height ) is the second shortest, the building number (of height ) is the third shortest, and so on.
       </p>
       <br />
@@ -106,7 +120,7 @@
     <!-- Upload file -->
     <div class="container">
       <div class="jumbotron">
-        <h1 class="display-6">Submit</h1>
+        <h1 class="display-6" >Submit</h1>
         <br />
         <form>
           <div class = "row">
