@@ -7,7 +7,7 @@ from markdown import markdown
 # The different languages we have choice to translate in
 LANG_CHOICES = (
     ('en', 'English'),
-    ('fr', 'French')
+    ('fr', 'Français')
 )
 
 # The different programming languages allowed
@@ -68,12 +68,17 @@ class ProblemDescription(models.Model):
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
     # The language it is written in
     language = models.CharField(max_length=2, choices=LANG_CHOICES)
+    # The translated title of the problem
+    # If left to null, the default name will be prompt
+    name = models.CharField(max_length=200, null=True)
     # The content of the description
     content = models.TextField()
 
     def __str__(self):
-        print(self.content_as_html())
-        return '%s (%s)' % (self.problem.name, self.language)
+        return '{name} ({language})'.format(
+            name = self.name if self.name is not None else self.problem.name,
+            language = self.language
+        )
 
     class Meta:
         unique_together = ('problem', 'language')

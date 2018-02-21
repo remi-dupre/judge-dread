@@ -22,7 +22,6 @@ from judge_dread.views import home,problem
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('home/',home),
-    path('problem/',problem)
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
-+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path('home/', home),
+    path('problem/', problem)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

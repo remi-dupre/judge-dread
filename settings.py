@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    #'django.contrib.staticfiles',
+    'django.contrib.staticfiles',
     'judge_dread'
 ]
 
@@ -103,8 +103,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Media files configuration
+# Media files (from the database)
+
 MEDIA_ROOT = 'db_files/'
+
 MEDIA_URL = '/media/'
 
 
@@ -127,4 +129,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = 'static/'
+STATICFILES_DIRS = [
+    'static/'
+]
