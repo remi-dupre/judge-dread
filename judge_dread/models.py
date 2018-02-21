@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from markdown import markdown
+
 
 # The different languages we have choice to translate in
 LANG_CHOICES = (
@@ -27,8 +29,10 @@ class User(AbstractUser):
     def __str__(self):
         if self.nickname is not None:
             return self.nickname
-        else:
+        elif self.first_name + self.last_name != '':
             return self.first_name + ' ' + self.last_name
+        else:
+            return self.username
 
 # Models related to testcase creation
 
@@ -68,10 +72,17 @@ class ProblemDescription(models.Model):
     content = models.TextField()
 
     def __str__(self):
+        print(self.content_as_html())
         return '%s (%s)' % (self.problem.name, self.language)
 
     class Meta:
         unique_together = ('problem', 'language')
+
+    def content_as_html(self):
+        """
+        Format the description's core content as html.
+        """
+        return markdown(self.content)
 
 
 class Attachment(models.Model):
@@ -109,7 +120,7 @@ class TestCase(models.Model):
 
     def __str__(self):
         return '{problem}: {order} -- {size} bytes input'.format(
-            problem = str(self.problem),
+            problem = self.problem,
             order = self.order,
             size = len(self.input.encode('utf-8'))
         )
