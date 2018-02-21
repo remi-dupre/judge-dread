@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 from markdown import markdown
+from .tools.markdown.io_examples import IOExamples
 
 
 # The different languages we have choice to translate in
@@ -87,7 +88,7 @@ class ProblemDescription(models.Model):
         """
         Format the description's core content as html.
         """
-        return markdown(self.content)
+        return markdown(self.content, extensions=[IOExamples()])
 
 
 class Attachment(models.Model):
