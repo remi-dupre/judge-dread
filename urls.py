@@ -18,10 +18,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 
-from judge_dread.views import home,problem
+from judge_dread.views import home,problem,creation
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', home),
-    path('problem/', problem)
+    path('problem/', problem),
+    path('creation/', creation)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
