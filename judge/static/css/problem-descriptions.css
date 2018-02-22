@@ -24,7 +24,7 @@
 
 /* ***** Images ***** */
 
-.problem-description img {
+.problem-description img:only-child {
     margin-top: 10px;
     margin-bottom: 10px;
 

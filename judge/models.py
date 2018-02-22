@@ -113,8 +113,9 @@ class ProblemDescription(models.Model):
                     problem_description = self
                 )
                 return attachment.file.url
-            except self.DoesNotExist:
+            except Attachment.DoesNotExist:
                 print(name, 'not found')
+
                 return '404.html'
 
         markdown = load_markdown_module(attachment_url_writer=url_finder)
@@ -197,6 +198,27 @@ class Submission(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def status(self):
+        """
+        Return the status of the submission.
+
+        The return value is a string, it can only be theses values:
+         - 'pending': the task has not been run yet
+         - 'success': all testcases went ok
+         - 'failed' : some testcases had mistakes
+         - 'error'  : something went wrong during the execution 
+        """
+        runs = Run.objects.filter(submission=self)
+
+        if not runs:
+            return 'pending'
+        elif runs.filter(status='error'):
+            return 'error'
+        elif runs.filter(status='failed'):
+            return 'failed'
+        else:
+            return 'success'
+
     def run(self):
         """
         Launch the test of the submission.
@@ -212,26 +234,36 @@ class Submission(models.Model):
         # Delete all related runs
         Run.objects.filter(submission=self).delete()
 
-        for test_result in camisole_ret['tests']:
-            testcase = TestCase.objects.get(pk=int(test_result['name']))
+        if 'tests' in camisole_ret.keys():
+            for test_result in camisole_ret['tests']:
+                testcase = TestCase.objects.get(pk=int(test_result['name']))
 
-            if test_result['meta']['status'] == 'OK' and testcase.valid_output(test_result['stdout']):
-                status = 'ok'
-            else:
-                status = 'err'
+                if test_result['meta']['status'] == 'OK' and testcase.valid_output(test_result['stdout']):
+                    status = 'ok'
+                else:
+                    status = 'failed'
 
+                run = Run(
+                    submission = self,
+                    testcase = testcase,
+                    status = status,
+                    raw_output = test_result['stdout'],
+                    camisole_output = str(test_result)
+                )
+                run.save()
+        else:
+            testcases = TestCase.objects.filter(problem=self.problem)
             run = Run(
                 submission = self,
-                testcase = testcase,
-                status = status,
-                raw_output = test_result['stdout'],
-                camisole_output = str(test_result)
+                testcase = testcases.order_by('order').first(),
+                status = 'error',
+                raw_output = None,
+                camisole_output = str(camisole_ret)
             )
-
             run.save()
 
     def __str__(self):
-        return '{author}: {problem} -- {language} -- {date}'.format(
+        return 'submission from {author} on "{problem}" using {language}'.format(
             author = self.author,
             problem = self.problem,
             language = self.language,
@@ -248,15 +280,13 @@ class Run(models.Model):
     testcase = models.ForeignKey(TestCase, on_delete=models.CASCADE)
     # Result of the submission
     STATUS_CHOICES = (
-        ('ok', 'OK'),
-        ('err', 'error')
+        ('ok', 'ok'),
+        ('error', 'error'),
+        ('failed', 'failed')
     )
-    status = models.CharField(max_length=3, choices=STATUS_CHOICES)
-    raw_output = models.TextField()
+    status = models.CharField(max_length=6, choices=STATUS_CHOICES)
+    raw_output = models.TextField(null=True)
     camisole_output = models.TextField()
-
-    def __str__(self):
-        return str(self.submission) + ' ' + str(self.status) + ' | testcase: ' + str(self.testcase)
 
     class Meta:
         unique_together = ('submission', 'testcase')
