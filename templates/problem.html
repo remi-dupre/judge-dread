@@ -1,122 +1,9 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
-    <title>Judge Dread</title>
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#" style="font-size: 40px; font-family: 'Gloria Hallelujah', cursive">
-        <img src="../static/logo/logo.svg" width="80" height="140">
-        Judge Dread
-      </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Tasks list</a>
-          </li>
-          <li>
-            <a class="nav-link" href="#">About us</a>
-          </li>
-          <li>
-            <a class="nav-link" href="#">Connexion</a>
-          </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-      </div>
-    </nav>
-
+{% extends 'navbar.html' %}
+{% block content%}
     <div class="container">
-      <h1> Matching </h1>
-
-      <p>
-        As a part of a new advertising campaign, a big company in Gdynia wants to put its logo somewhere in the city. The company is going to spend the whole advertising budget for this year on the logo, so it has to be really huge. One of the managers decided to use whole buildings as parts of the logo.
-      </p>
-      <p>
-        The logo consists of vertical stripes of different heights. The stripes are numbered from 1 to from left to right. The logo is described by a permutation of numbers . The stripe number is the shortest one, the stripe number is the second shortest etc., finally the stripe is the tallest one. The actual heights of the stripes do not really matter.
-      </p>
-      <p>
-        There are buildings along the main street in Gdynia. To your surprise, the heights of the buildings are distinct. The problem is to find all positions where the logo matches the buildings.
-      </p>
-      <p>
-        Help the company and find all contiguous parts of the sequence of buildings which match the logo. A contiguous sequence of buildings matches the logo if the building number within this sequence is the shortest one, the building number is the second shortest, etc. For example a sequence of buildings of heights matches a logo described by a permutation , since the building number (of height ) is the shortest one, the building number is the second shortest and the building number is the tallest.
-      </p>
-      <br />
+      <h1> {{problem_description.name}} </h1>
+      {{problem_description.content_as_html | safe}}
     </div>
-
-    <!-- Input Format -->
-    <div class="container">
-      <h3>Input Format</h3>
-      <p> The first line of the standard input contains two integers and (). The second line contains integers , forming a permutation of the numbers . That is, and for . The third line contains integers - the heights of the buildings ( for ). All the numbers are different. In each line the integers are separated by single spaces. </p>
-      <p> Additionally, in test cases worth at least 35 points, and , whereas in test cases worth at least 60 points, and .</p>
-    </div>
-
-    <!-- Output Format -->
-    <div class="container">
-      <h3>Output Format</h3>
-      <p> The first line of the standard output should contain an integer , the number of matches. The second line should contain integers - 1-based indices of buildings which correspond to the stripe number 1 from the logo in a proper match. The numbers should be listed in an increasing order and separated by single spaces. If , your program should print an empty second line. </p>
-    </div>
-
-    <!-- Input Constraint -->
-    <div class="container">
-      <h3>Input Constraints</h3>
-      <ul>
-        <li> 2 &le; n &le; m </li>
-        <li> 1 &le; hi &le; 10⁹ for 1 &le; i &le; n </li>
-      </ul>
-    </div>
-
-    <!-- Input and Output Example-->
-
-    <div class="container">
-      <br />
-      <h3>Example</h3>
-
-      <div class="row">
-        <div class="col">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title"> Input </h5>
-              <p class="card-text">  5 10 <br/> 2 1 5 3 4 <br/>  5 6 3 8 12 7 1 10 11 9  <!-- input example --> </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title"> Output </h5>
-              <p class="card-text"> 2 <br/> 2 6 <!-- output example --> </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <br />
-      <p class="lead">
-        <!--Comment on the example-->
-         Both the sequences (6,3,8,12,7) and (7,1,10,11,9) match the logo described by the permutation (2,1,5,3,4). In particular, in the first sequence the building number (of height ) is the shortest one, the building number (of height ) is the second shortest, the building number (of height ) is the third shortest, and so on.
-      </p>
-      <br />
-
-    </div>
-
     <!-- Upload file -->
     <div class="container">
       <div class="jumbotron">
@@ -148,11 +35,4 @@
       </div>
     </div>
 
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  </body>
-</html>
+{% endblock %}
