@@ -42,8 +42,8 @@ class IOEXampleProcessor(BlockProcessor):
 
         # Create subtree
         main_block = etree.SubElement(parent, 'div')
-        in_block = etree.SubElement(main_block, 'div')
-        out_block = etree.SubElement(main_block, 'div')
+        in_block = etree.SubElement(main_block, 'pre')
+        out_block = etree.SubElement(main_block, 'pre')
 
         main_block.set('class', 'example')
         in_block.set('class', 'input')

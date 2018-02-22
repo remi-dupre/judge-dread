@@ -1,7 +1,10 @@
+import re
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 from .tools.markdown import load_markdown_module
+from .tools.camisole import run as camisole_run
 
 
 # The different languages we have choice to translate in
@@ -55,6 +58,21 @@ class Problem(models.Model):
     )
     soluce_code = models.TextField()
 
+    def make_camisole_input(self):
+        """
+        Return the description of this problem's testcases in camisole's format
+        """
+        ret = []
+        testcases = TestCase.objects.filter(problem=self).order_by('order')
+
+        for test in testcases:
+            ret.append({
+                'name': str(test.id),
+                'stdin': test.input
+            })
+
+        return ret
+
     def __str__(self):
         return self.name
 
@@ -75,7 +93,6 @@ class ProblemDescription(models.Model):
     content = models.TextField()
 
     def __str__(self):
-        print(self.content_as_html())
         return '{name} ({language})'.format(
             name = self.name if self.name is not None else self.problem.name,
             language = self.language
@@ -137,6 +154,24 @@ class TestCase(models.Model):
     # The testcases will be ordered following the key `order`
     order = models.IntegerField(default=0)
 
+    def valid_output(self, text):
+        """
+        Check if an output is valid by comparing it to self.output.
+        """
+        def normalized(text):
+            """
+            Return a normalized version of the text.
+            """
+            text = re.sub('( |\t)+', ' ', text)
+            text = re.sub('\n+', '\n', text)
+
+            if text[-1] == '\n':
+                text = text[:-1]
+
+            return text
+
+        return normalized(text) == normalized(self.output)
+
     def __str__(self):
         return '{problem}: {order} -- {size} bytes input'.format(
             problem = self.problem,
@@ -157,9 +192,43 @@ class Submission(models.Model):
     )
     code = models.TextField()
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE, null=True)
+
     # Extra informations about the submission
     date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def run(self):
+        """
+        Launch the test of the submission.
+
+        If a run was already launched, its datas will be erased.
+        """
+        camisole_ret = camisole_run(
+            lang = self.language,
+            source = self.code,
+            tests = self.problem.make_camisole_input()
+        )
+
+        # Delete all related runs
+        Run.objects.filter(submission=self).delete()
+
+        for test_result in camisole_ret['tests']:
+            testcase = TestCase.objects.get(pk=int(test_result['name']))
+
+            if test_result['meta']['status'] == 'OK' and testcase.valid_output(test_result['stdout']):
+                status = 'ok'
+            else:
+                status = 'err'
+
+            run = Run(
+                submission = self,
+                testcase = testcase,
+                status = status,
+                raw_output = test_result['stdout'],
+                camisole_output = str(test_result)
+            )
+
+            run.save()
 
     def __str__(self):
         return '{author}: {problem} -- {language} -- {date}'.format(
@@ -187,7 +256,7 @@ class Run(models.Model):
     camisole_output = models.TextField()
 
     def __str__(self):
-        return str(self.submission) + ' ' + str(self.status)
+        return str(self.submission) + ' ' + str(self.status) + ' | testcase: ' + str(self.testcase)
 
     class Meta:
         unique_together = ('submission', 'testcase')

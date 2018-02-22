@@ -19,11 +19,11 @@ from django.contrib import admin
 from django.urls import path
 
 
-from judge.views import home, problem_display, creation
+from judge.views import home, problem_display, creation, run_submission
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', home),
     path('problem/<int:problem_id>/', problem_display),
-    path('creation/', creation)
+    path('creation/', creation),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

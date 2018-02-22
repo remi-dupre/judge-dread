@@ -3,7 +3,8 @@ from django.template.loader import get_template
 from django.http import HttpResponse, Http404
 
 from .forms import ProblemForm
-from .models import Problem, ProblemDescription
+from .models import Problem, ProblemDescription, Submission
+
 
 def home(request):
     """
@@ -60,5 +61,3 @@ def creation(request):
         }
         template = get_template('creation.html')
         return HttpResponse(template.render(context, request))
-
-# Create your views here.
