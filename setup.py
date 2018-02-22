@@ -9,6 +9,7 @@ setup(
     install_requires=[
         'django>=2.0',
         'markdown>=2.6',
+        'django-bootstrap4',
         'regex'
     ]
 )

@@ -1,9 +1,9 @@
 from django.shortcuts import render,redirect
 from django.template.loader import get_template
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 
 from .forms import ProblemForm
-from .models import Problem,ProblemDescription
+from .models import Problem, ProblemDescription
 
 def home(request):
     """
@@ -12,9 +12,18 @@ def home(request):
     template = get_template("home.html")
     return HttpResponse(template.render({},request))
 
-def problem(request):
+def problem_display(request, problem_id):
+    try:
+        problem_description = ProblemDescription.objects.get(pk=problem_id)
+    except ProblemDescription.DoesNotExist:
+        raise Http404('Problem does not exist')
+
     template = get_template("problem.html")
-    return HttpResponse(template.render({},request))
+    context = {
+        'problem_description': problem_description,
+        'problem': problem_description.problem
+    }
+    return HttpResponse(template.render(context, request))
 
 def creation(request):
     """"
