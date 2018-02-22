@@ -37,8 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+<<<<<<< HEAD
     'judge_dread',
     'bootstrap4',
+=======
+    'judge'
+>>>>>>> 5d3846ba4bfe7d4ea961a8521381a644a5ad3e5b
 ]
 
 MIDDLEWARE = [
@@ -83,7 +87,7 @@ DATABASES = {
 }
 
 
-AUTH_USER_MODEL = 'judge_dread.User'
+AUTH_USER_MODEL = 'judge.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

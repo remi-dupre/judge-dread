@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from markdown import markdown
+from .tools.markdown import load_markdown_module
 
 
 # The different languages we have choice to translate in
@@ -75,6 +75,7 @@ class ProblemDescription(models.Model):
     content = models.TextField()
 
     def __str__(self):
+        print(self.content_as_html())
         return '{name} ({language})'.format(
             name = self.name if self.name is not None else self.problem.name,
             language = self.language
@@ -87,6 +88,19 @@ class ProblemDescription(models.Model):
         """
         Format the description's core content as html.
         """
+        def url_finder(name):
+            # Get the right attachment, and extracts his url
+            try:
+                attachment = Attachment.objects.get(
+                    name = name,
+                    problem_description = self
+                )
+                return attachment.file.url
+            except self.DoesNotExist:
+                print(name, 'not found')
+                return '404.html'
+
+        markdown = load_markdown_module(attachment_url_writer=url_finder)
         return markdown(self.content)
 
 

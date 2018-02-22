@@ -8,6 +8,7 @@ setup(
     author_email='remim.dupre@gmail.com',
     install_requires=[
         'django>=2.0',
-        'markdown>=2.6'
+        'markdown>=2.6',
+        'regex'
     ]
 )
