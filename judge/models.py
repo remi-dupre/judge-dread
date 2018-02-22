@@ -3,6 +3,7 @@ from django.db import models
 
 from markdown import markdown
 from .tools.markdown.io_examples import IOExamples
+from .tools.markdown.attachments import AttachmentLinks
 
 
 # The different languages we have choice to translate in
@@ -88,7 +89,21 @@ class ProblemDescription(models.Model):
         """
         Format the description's core content as html.
         """
-        return markdown(self.content, extensions=[IOExamples()])
+        def url_finder(name):
+            # Get the right attachment, and extracts his url
+            try:
+                attachment = Attachment.objects.get(
+                    name = name,
+                    problem_description = self
+                )
+                return attachment.file.url
+            except self.DoesNotExist:
+                print(name, 'not found')
+                return '404.html'
+
+        return markdown(self.content, extensions=[
+            IOExamples(), AttachmentLinks(url_writer=url_finder)
+        ])
 
 
 class Attachment(models.Model):
