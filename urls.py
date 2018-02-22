@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import path
 
 
-from judge.views import home, problem_display, creation, run_submission
+from judge.views import home, problem_display, creation
 
 urlpatterns = [
     path('admin/', admin.site.urls),
