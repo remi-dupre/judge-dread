@@ -18,11 +18,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 
-<<<<<<< HEAD
-from judge_dread.views import home,problem,creation
-=======
-from judge.views import home,problem
->>>>>>> 5d3846ba4bfe7d4ea961a8521381a644a5ad3e5b
+
+from judge.views import home,problem,creation
 
 urlpatterns = [
     path('admin/', admin.site.urls),

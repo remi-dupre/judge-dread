@@ -37,12 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-<<<<<<< HEAD
-    'judge_dread',
     'bootstrap4',
-=======
     'judge'
->>>>>>> 5d3846ba4bfe7d4ea961a8521381a644a5ad3e5b
 ]
 
 MIDDLEWARE = [
