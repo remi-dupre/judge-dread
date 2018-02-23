@@ -1,11 +1,12 @@
 import re
-import json
 
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from camisole.camisole_api import run as camisole_run
+import camisole.models
 from .tools.markdown import load_markdown_module
-from .tools.camisole import run as camisole_run
 
 
 # The different languages we have choice to translate in
@@ -51,6 +52,7 @@ class User(AbstractUser):
             return self.first_name + ' ' + self.last_name
         else:
             return self.username
+
 
 # Models related to testcase creation
 
@@ -178,12 +180,14 @@ class TestCase(models.Model):
             """
             Return a normalized version of the text.
             """
+            text = re.sub('\r', '', text)
             text = re.sub('( |\t)+', ' ', text)
             text = re.sub('\n+', '\n', text)
 
             if text and text[-1] == '\n':
                 text = text[:-1]
 
+            print(repr(text))
             return text
 
         return normalized(text) == normalized(self.output)
@@ -195,7 +199,6 @@ class TestCase(models.Model):
             size = len(self.input.encode('utf-8'))
         )
 
-# Models related to submissions
 
 class Submission(models.Model):
     """
@@ -223,7 +226,7 @@ class Submission(models.Model):
          - 'failed' : some testcases had mistakes
          - 'error'  : something went wrong during the execution 
         """
-        runs = Run.objects.filter(submission=self)
+        runs = camisole.models.Run.objects.filter(submission=self)
 
         if hasattr(self, 'compilation') and self.compilation.status == 'error':
             return 'compile error'
@@ -250,11 +253,11 @@ class Submission(models.Model):
         print(result)
 
         # Delete all related runs
-        Run.objects.filter(submission=self).delete()
+        camisole.models.Run.objects.filter(submission=self).delete()
 
         # Create compilation result
         if 'compile' in result.keys():
-            compilation = Compilation(
+            compilation = camisole.models.Compilation(
                 submission = self,
                 status = result['compile']['status'],
                 errors = result['compile']['errors'],
@@ -277,7 +280,7 @@ class Submission(models.Model):
                 status = test_result['status']
                 reason = test_result['reason']
 
-            run = Run(
+            run = camisole.models.Run(
                 submission = self,
                 testcase = testcase,
                 status = status,
@@ -296,59 +299,3 @@ class Submission(models.Model):
             language = self.language,
             date = self.date
         )
-
-
-class Compilation(models.Model):
-    """
-    The result of the last compilation of a submission.
-    """
-    submission = models.OneToOneField(
-        Submission,
-        on_delete = models.CASCADE,
-        primary_key = True
-    )
-    # Status of the compilation
-    STATUS_CHOICES = (
-        ('ok', 'ok'),
-        ('error', 'error')
-    )
-    status = models.CharField(max_length=8)
-    errors = models.TextField()
-    # Raw formatted result of the submission
-    camisole_output = models.TextField()
-
-
-
-class Run(models.Model):
-    """
-    The result for a submission of its last run on a testcase.
-    """
-    # Submission, and testcase it relates to
-    submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
-    testcase = models.ForeignKey(TestCase, on_delete=models.CASCADE)
-    # State informations deduced from camisole's output
-    STATUS_CHOICES = (
-        ('ok', 'ok'),
-        ('error', 'error'),
-        ('failed', 'failed')
-    )
-    status = models.CharField(max_length=8, choices=STATUS_CHOICES)
-    REASON_CHOICES = (
-        ('match', 'Right answer'),
-        ('segfault', 'Segmentation fault'),
-        ('timeout', 'Time limit exeeded'),
-        ('memory', 'Memory usage exeeded'),
-        ('unknown', 'Unknown reason'),
-        ('wrong', 'Wrong answer')
-    )
-    reason = models.CharField(max_length=8, blank=True, choices=REASON_CHOICES)
-    # Output of the program
-    output = models.TextField()
-    # Ressouces used by the program
-    time = models.DecimalField(max_digits=9, decimal_places=3)
-    mem = models.IntegerField()
-    # Raw formatted result of the submission
-    camisole_output = models.TextField()
-
-    class Meta:
-        unique_together = ('submission', 'testcase')

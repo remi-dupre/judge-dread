@@ -14,7 +14,7 @@ import os
 
 # Load submodules settings
 
-from judge.settings import *
+from camisole.settings import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap4',
+    'camisole',
     'judge'
 ]
 
@@ -86,8 +87,8 @@ DATABASES = {
     }
 }
 
-
 AUTH_USER_MODEL = 'judge.User'
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

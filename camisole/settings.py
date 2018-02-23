@@ -1,5 +1,5 @@
 """
-Configuration of the judge system
+Configuration camisole
 """
 
 # Camisole configuration
