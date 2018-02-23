@@ -87,5 +87,3 @@ def creation(request):
         }
         template = get_template('creation.html')
         return HttpResponse(template.render(context, request))
-
-# Create your views here.

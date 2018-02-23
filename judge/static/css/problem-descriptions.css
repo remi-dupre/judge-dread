@@ -1,0 +1,130 @@
+/**
+ * Define extra css for problem descriptions.
+ */
+
+.problem-description {
+    padding-left: 15px;
+}
+
+.problem-description > * {
+    margin-bottom:  10px;
+}
+
+.problem-description > h1 {
+    margin-left: -15px;
+}
+
+.problem-description > h2 {
+    margin-left: -10px;
+}
+
+.problem-description > h3 {
+    margin-left: -5.px;
+}
+
+/* ***** Images ***** */
+
+.problem-description img:only-child {
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+    /* Center the image */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+    /* Limit the image's shape */
+    max-height: 200%;
+    max-width: 70%;
+}
+
+/* ***** Input / Outputs ***** */
+
+.problem-description .example {
+    margin-bottom: 5px;
+}
+
+.problem-description .example > div {
+    padding-bottom: 5px;
+}
+
+.problem-description .example .input {
+    margin: 0px;
+
+    border: #dbdbdb solid 1px;
+    border-radius: 3px;
+
+    background-color: #f5f5f5;
+    padding: 5px;
+    height: 100%;
+}
+
+.problem-description .example .output {
+    margin: 0px;
+
+    border: #dbdbdb solid 1px;
+    border-radius: 3px;
+
+    background-color: #f5f5f5;
+    padding: 5px;
+    height: 100%;
+}
+
+/* Adding little titles in top of inputs / outputs */
+
+.problem-description .example .input::before {
+    color: gray;
+
+    font-size: 0.7em;
+    font-weight: bold;
+
+    content: "Input";
+    display: block;
+}
+
+.problem-description .example .output::before {
+    color: gray;
+
+    font-size: 0.7em;
+    font-weight: bold;
+
+    content: "Output";
+    display: block;
+}
+
+/* ***** Quotes ***** */
+
+.problem-description blockquote {
+    display: inline-block;
+    margin-left: 5px;
+    padding-left: 5px;
+    border-left: #dbdbdb solid 3px;
+}
+
+.problem-description blockquote p {
+    margin-bottom: 5px;
+}
+
+/* ***** Tables ***** */
+
+.problem-description table thead {
+    border-bottom: #dbdbdb solid 1px;
+}
+
+.problem-description table td {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.problem-description table th {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.problem-description table th[align="center"] {
+    text-align: center;
+}
+
+.problem-description table th[align="right"] {
+    text-align: right;
+}

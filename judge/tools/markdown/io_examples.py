@@ -42,11 +42,15 @@ class IOEXampleProcessor(BlockProcessor):
 
         # Create subtree
         main_block = etree.SubElement(parent, 'div')
-        in_block = etree.SubElement(main_block, 'div')
-        out_block = etree.SubElement(main_block, 'div')
+        in_block_col = etree.SubElement(main_block, 'div')
+        in_block = etree.SubElement(in_block_col, 'pre')
+        out_block_col = etree.SubElement(main_block, 'div')
+        out_block = etree.SubElement(out_block_col, 'pre')
 
-        main_block.set('class', 'example')
+        main_block.set('class', 'example row')
+        in_block_col.set('class', 'col-md-6')
         in_block.set('class', 'input')
+        out_block_col.set('class', 'col-md-6')
         out_block.set('class', 'output')
 
         in_block.text = AtomicString(input_text)

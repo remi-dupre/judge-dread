@@ -10,7 +10,9 @@ Garance Gourdel, Rémi Dupré
 ## Dependancies
 The project runs with *Django 2.0* and *python 3.5*.
 Some libraries are required, and may have to be installed using pip or setup.py:
+ - *django-bootstrap4*
  - *markdown 2.6*
  - *regex*
+ - *requests*
 
 The dependancies specified in setup.py can be automatically installed by running `./setup.py develop`.

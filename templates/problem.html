@@ -1,11 +1,14 @@
 {% extends 'navbar.html' %}
 {% load bootstrap4 %}
 
-{% block content%}
+{% block content %}
     <div class="container">
-      <h1> {{problem_description.name}} </h1>
-      {{problem_description.content_as_html | safe}}
+      <div class="problem-description">
+        <h1>{{ problem_description.name }}</h1>
+        {{ problem_description.content_as_html | safe }}
+      </div>
     </div>
+
     <!-- Upload file -->
 
     <div class="container">
