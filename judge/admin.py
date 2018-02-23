@@ -28,7 +28,7 @@ class RunAdmin(admin.ModelAdmin):
     submission__date.short_description = 'Submission\'s date'
 
     ordering = ['status', 'testcase__order', 'submission']
-    list_display = ['testcase__problem', 'submission__author', 'status', 'submission__date']
+    list_display = ['testcase__problem', 'submission__author', 'status', 'reason', 'submission__date', 'time', 'mem']
 
 
 admin.site.register(User, UserAdmin)

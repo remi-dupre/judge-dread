@@ -3,7 +3,7 @@
  */
 
 .problem-description {
-    margin-left: 15x;
+    padding-left: 15px;
 }
 
 .problem-description > * {

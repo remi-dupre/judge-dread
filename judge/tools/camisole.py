@@ -22,7 +22,7 @@ def languages():
     req = requests.get(ADDRESS + '/languages')
     return req.json()['languages']
 
-def run(source, lang, tests=[]):
+def run(source, lang, tests=[], time=1, mem=10000):
     """
     Run a code on a given list of testcases.
 
@@ -32,11 +32,21 @@ def run(source, lang, tests=[]):
 
     The output is a dictionnary with camisole's raw output.
     """
+    for test in tests:
+        test.update({
+            'time': time,
+            'mem': mem  
+        })
+
     parameters = {
         'lang': lang,
         'source': source,
+        'execute': {
+            'processes': settings.PROCESSES
+        },
         'tests': tests
     }
+    print(parameters)
 
     req = requests.post(ADDRESS + '/run', json=parameters)
     return req.json()
