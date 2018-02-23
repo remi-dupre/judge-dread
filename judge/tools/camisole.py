@@ -33,6 +33,7 @@ def run(source, lang, tests=[], time=1, mem=10000):
     The output is a dictionnary with camisole's raw output.
     """
     for test in tests:
+        test['name'] = str(test['id'])
         test.update({
             'time': time,
             'mem': mem  
@@ -49,4 +50,67 @@ def run(source, lang, tests=[], time=1, mem=10000):
     print(parameters)
 
     req = requests.post(ADDRESS + '/run', json=parameters)
-    return req.json()
+    print(read_answer(req.json(), mem))
+    return read_answer(req.json(), mem)
+
+def read_answer(output, mem):
+    """
+    Extract needed informations from camisole's output.
+
+    :param output: raw input of camisole (decoded json)
+    :param mem:    memory allocated to the program
+    :return:       a dictionnary with string keys
+      - success (bool): wether camisole was able to analyse the request
+      - compile (dict): compilation informations
+      - tests   (dict): tests informations
+      - raw     (dict): camisole's raw output
+
+    A test information contains following keys:
+      - id       (int)
+      - status   (str): ok, fail, error
+      - output   (str): the output of the test
+      - mem      (int): memory used during the testcase, in kilobytes
+      - time   (float): time spent on the test, in seconds
+      - raw     (dict): camisole's raw output for this test
+    If status isn't 'ok'
+      - reason   (str): segfault, timeout, memory, unknown
+    """
+    compile = {}
+    tests = []
+
+    for test_output in output['tests']:
+        meta = test_output['meta']
+        test = {
+            'id': int(test_output['name']),
+            'status': None,
+            'output': test_output['stdout'],
+            'time': meta['time'],
+            'mem': meta['cg-mem'],
+            'raw': test_output
+        }
+
+        if meta['status'] == 'OK':
+            test['status'] = 'ok'
+        else:
+            if meta['exitsig'] == 11:
+                test['status'] = 'failed'
+                test['reason'] = 'segfault'
+            elif meta['status'] == 'TIMED_OUT':
+                test['status'] = 'failed'
+                test['reason'] = 'timeout'
+            elif meta['status'] == 'SIGNALED' and test['mem'] == mem:
+                test['status'] = 'failed'
+                test['reason'] = 'memory'
+            else:
+                test['status'] = 'error'
+                test['reason'] = 'unknown'
+
+        tests.append(test)
+
+
+    return {
+        'success': output['success'],
+        'tests': tests,
+        'compile': compile,
+        'raw': output
+    }

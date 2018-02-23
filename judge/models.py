@@ -82,7 +82,7 @@ class Problem(models.Model):
 
         for test in testcases:
             ret.append({
-                'name': str(test.id),
+                'id': test.id,
                 'stdin': test.input
             })
 
@@ -240,44 +240,41 @@ class Submission(models.Model):
 
         If a run was already launched, its datas will be erased.
         """
-        camisole_ret = camisole_run(
+        result = camisole_run(
             lang = self.language,
             source = self.code,
             tests = self.problem.make_camisole_input()
         )
-        print(camisole_ret)
+        print(result)
 
         # Delete all related runs
         Run.objects.filter(submission=self).delete()
 
-        if 'tests' in camisole_ret.keys():
-            for test_result in camisole_ret['tests']:
-                testcase = TestCase.objects.get(pk=int(test_result['name']))
-                print(testcase)
+        for test_result in result['tests']:
+            testcase = TestCase.objects.get(pk=test_result['id'])
+            answer_ok = testcase.valid_output(test_result['output'])
 
-                if test_result['meta']['status'] == 'OK' and testcase.valid_output(test_result['stdout']):
-                    status = 'ok'
-                else:
-                    status = 'failed'
+            if test_result['status'] == 'ok' and answer_ok:
+                status = 'ok'
+                reason = 'match'
+            elif test_result['status'] == 'ok':
+                status = 'failed'
+                reason = 'wrong'
+            else:
+                status = test_result['status']
+                reason = test_result['reason']
 
-                run = Run.from_camisole_output(
-                    submission = self,
-                    testcase = testcase,
-                    # status = status,
-                    # output = test_result['stdout'],
-                    camisole_output = test_result
-                )
-                run.save()
-        else:
-            pass
-            # testcases = TestCase.objects.filter(problem=self.problem)
-            # run = Run(
-            #     submission = self,
-            #     testcase = testcases.order_by('order').first(),
-            #     status = 'error',
-            #     camisole_output = json.dumps(camisole_ret)
-            # )
-            # run.save()
+            run = Run(
+                submission = self,
+                testcase = testcase,
+                status = status,
+                reason = reason,
+                output = test_result['output'],
+                time = test_result['time'],
+                mem = test_result['mem'],
+                camisole_output = test_result['raw']
+            )
+            run.save()
 
     def __str__(self):
         return 'submission from {author} on "{problem}" using {language}'.format(
@@ -292,66 +289,32 @@ class Run(models.Model):
     """
     The result for a testcase.
     """
-    def from_camisole_output(testcase, camisole_output, **kwargs):
-        """
-        Construct status fields given camisole's output
-        """
-        meta = camisole_output['meta']
-        output_matches = testcase.valid_output(camisole_output['stdout'])
-
-        if meta['status'] != 'OK':
-            if meta['exitsig'] == 11:
-                status = 'failed'
-                reason = 'segfault'
-            elif meta['status'] == 'TIMED_OUT':
-                status = 'failed'
-                reason = 'timeout'
-            else:
-                status = 'error'
-                reason = 'unknown'
-        elif output_matches:
-            status = 'ok'
-            reason = 'match'
-        else:
-            status = 'failed'
-            reason = 'wrong'
-
-        return Run(
-            status = status,
-            reason = reason,
-            output = camisole_output['stdout'],
-            time = meta['time'],
-            mem = meta['cg-mem'],
-            testcase = testcase,
-            camisole_output = json.dumps(camisole_output),
-            **kwargs
-        )
-
     # Submission, and testcase it relates to
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     testcase = models.ForeignKey(TestCase, on_delete=models.CASCADE)
-    # Result of the submission
-    camisole_output = models.TextField()
     # State informations deduced from camisole's output
     STATUS_CHOICES = (
         ('ok', 'ok'),
         ('error', 'error'),
         ('failed', 'failed')
     )
-    status = models.CharField(max_length=6, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=8, choices=STATUS_CHOICES)
     REASON_CHOICES = (
         ('match', 'Right answer'),
         ('segfault', 'Segmentation fault'),
         ('timeout', 'Time limit exeeded'),
+        ('memory', 'Memory usage exeeded'),
         ('unknown', 'Unknown reason'),
         ('wrong', 'Wrong answer')
     )
-    reason = models.CharField(max_length=255, blank=True, choices=REASON_CHOICES)
+    reason = models.CharField(max_length=8, blank=True, choices=REASON_CHOICES)
     # Output of the program
     output = models.TextField()
     # Ressouces used by the program
     time = models.DecimalField(max_digits=9, decimal_places=3)
     mem = models.IntegerField()
+    # Raw formatted result of the submission
+    camisole_output = models.TextField()
 
     class Meta:
         unique_together = ('submission', 'testcase')
