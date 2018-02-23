@@ -1,38 +1,21 @@
 {% extends 'navbar.html' %}
+{% load bootstrap4 %}
+
 {% block content%}
     <div class="container">
       <h1> {{problem_description.name}} </h1>
       {{problem_description.content_as_html | safe}}
     </div>
     <!-- Upload file -->
+
     <div class="container">
-      <div class="jumbotron">
-        <h1 class="display-6" >Submit</h1>
-        <br />
-        <form>
-          <div class = "row">
-            <div class = "col-sm-8">
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" id="customFile">
-                <label class="custom-file-label" for="customFile">Choose file</label>
-              </div>
-            </div>
-
-            <div class = "col-sm-2">
-              <select class="custom-select custom-select-lg mb-3">
-                <option selected>Programming language</option>
-                <option value="1">Ada</option>
-                <option value="2">C++</option>
-                <option value="3">Caml</option>
-              </select>
-            </div>
-
-            <div class = "col-sm-2">
-              <button type="submit" class="btn btn-primary btn-lg">Submit</button>
-            </div>
-          </div>
-        </form>
-      </div>
+      <form action="" method="post" class="form" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        {% endbuttons %}
+      </form>
     </div>
 
 {% endblock %}

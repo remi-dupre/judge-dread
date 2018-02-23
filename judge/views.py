@@ -2,8 +2,8 @@ from django.shortcuts import render,redirect
 from django.template.loader import get_template
 from django.http import HttpResponse, Http404
 
-from .forms import ProblemForm
-from .models import Problem, ProblemDescription
+from .forms import ProblemForm, SubmissionForm
+from .models import Problem, ProblemDescription, Submission
 
 def home(request):
     """
@@ -18,12 +18,39 @@ def problem_display(request, problem_id):
     except ProblemDescription.DoesNotExist:
         raise Http404('Problem does not exist')
 
-    template = get_template("problem.html")
-    context = {
-        'problem_description': problem_description,
-        'problem': problem_description.problem
-    }
-    return HttpResponse(template.render(context, request))
+    # Recover form datas
+    if request.method == 'POST':
+        form = SubmissionForm(request.POST, request.FILES)
+    else:
+        form = SubmissionForm()
+
+    # Save form datas and redirect to main page
+    if form.is_valid():
+        if form.data['code']:
+            print("pouet")
+            sub = Submission(
+                language = form.cleaned_data['language'],
+                code = form.cleaned_data['code'],
+                problem = problem_description.problem
+            )
+        else:
+            sub = Submission(
+                language = form.cleaned_data['language'],
+                code = form.cleaned_data['code'],
+                problem = problem_description.problem
+            )
+        sub.save()
+        return redirect(home)
+
+    else:
+        template = get_template("problem.html")
+        context = {
+            'form': form,
+            'problem_description': problem_description,
+            'problem': problem_description.problem
+        }
+        return HttpResponse(template.render(context, request))
+
 
 def creation(request):
     """"
