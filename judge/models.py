@@ -225,6 +225,8 @@ class Submission(models.Model):
         """
         runs = Run.objects.filter(submission=self)
 
+        if hasattr(self, 'compilation') and self.compilation.status == 'error':
+            return 'compile error'
         if not runs:
             return 'pending'
         elif runs.filter(status='error'):
@@ -250,6 +252,17 @@ class Submission(models.Model):
         # Delete all related runs
         Run.objects.filter(submission=self).delete()
 
+        # Create compilation result
+        if 'compile' in result.keys():
+            compilation = Compilation(
+                submission = self,
+                status = result['compile']['status'],
+                errors = result['compile']['errors'],
+                camisole_output = result['compile']['raw']
+            )
+            compilation.save()
+
+        # Create runs results
         for test_result in result['tests']:
             testcase = TestCase.objects.get(pk=test_result['id'])
             answer_ok = testcase.valid_output(test_result['output'])
@@ -285,9 +298,30 @@ class Submission(models.Model):
         )
 
 
+class Compilation(models.Model):
+    """
+    The result of the last compilation of a submission.
+    """
+    submission = models.OneToOneField(
+        Submission,
+        on_delete = models.CASCADE,
+        primary_key = True
+    )
+    # Status of the compilation
+    STATUS_CHOICES = (
+        ('ok', 'ok'),
+        ('error', 'error')
+    )
+    status = models.CharField(max_length=8)
+    errors = models.TextField()
+    # Raw formatted result of the submission
+    camisole_output = models.TextField()
+
+
+
 class Run(models.Model):
     """
-    The result for a testcase.
+    The result for a submission of its last run on a testcase.
     """
     # Submission, and testcase it relates to
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)

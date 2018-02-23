@@ -65,6 +65,11 @@ def read_answer(output, mem):
       - tests   (dict): tests informations
       - raw     (dict): camisole's raw output
 
+    Compile informations contains the following keys:
+      - status   (str): ok, error
+      - errors   (str): the compiler's errors output
+      - raw     (dict): camisole's raw output for compilation 
+
     A test information contains following keys:
       - id       (int)
       - status   (str): ok, fail, error
@@ -75,42 +80,49 @@ def read_answer(output, mem):
     If status isn't 'ok'
       - reason   (str): segfault, timeout, memory, unknown
     """
-    compile = {}
-    tests = []
-
-    for test_output in output['tests']:
-        meta = test_output['meta']
-        test = {
-            'id': int(test_output['name']),
-            'status': None,
-            'output': test_output['stdout'],
-            'time': meta['time'],
-            'mem': meta['cg-mem'],
-            'raw': test_output
-        }
-
-        if meta['status'] == 'OK':
-            test['status'] = 'ok'
-        else:
-            if meta['exitsig'] == 11:
-                test['status'] = 'failed'
-                test['reason'] = 'segfault'
-            elif meta['status'] == 'TIMED_OUT':
-                test['status'] = 'failed'
-                test['reason'] = 'timeout'
-            elif meta['status'] == 'SIGNALED' and test['mem'] == mem:
-                test['status'] = 'failed'
-                test['reason'] = 'memory'
-            else:
-                test['status'] = 'error'
-                test['reason'] = 'unknown'
-
-        tests.append(test)
-
-
-    return {
+    ret =  {
         'success': output['success'],
-        'tests': tests,
-        'compile': compile,
+        'tests': [],
         'raw': output
     }
+
+    if 'compile' in output.keys():
+        ret['compile'] = {
+            'status': 'ok' if output['compile']['exitcode'] == 0 else 'error',
+            'errors': output['compile']['stdout'],
+            'raw': output['compile']
+        }
+
+    print(output)
+    tests = []
+    if 'tests' in output.keys():
+        for test_output in output['tests']:
+            meta = test_output['meta']
+            test = {
+                'id': int(test_output['name']),
+                'status': None,
+                'output': test_output['stdout'],
+                'time': meta['time'],
+                'mem': meta['cg-mem'],
+                'raw': test_output
+            }
+
+            if test_output['exitcode'] == 0:
+                test['status'] = 'ok'
+            else:
+                if meta['exitsig'] == 11:
+                    test['status'] = 'failed'
+                    test['reason'] = 'segfault'
+                elif meta['status'] == 'TIMED_OUT':
+                    test['status'] = 'failed'
+                    test['reason'] = 'timeout'
+                elif meta['status'] == 'SIGNALED' and test['mem'] == mem:
+                    test['status'] = 'failed'
+                    test['reason'] = 'memory'
+                else:
+                    test['status'] = 'error'
+                    test['reason'] = 'unknown'
+
+            ret['tests'].append(test)
+
+    return ret
