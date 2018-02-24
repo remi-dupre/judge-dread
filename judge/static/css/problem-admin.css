@@ -2,6 +2,11 @@
  * Additional style for the problem administration page.
  */
 
+.false-disabled-link {
+    cursor: not-allowed;
+    color: grey;
+}
+
 #problem-descriptions-tab .description-container {
     padding: 15px;
 }

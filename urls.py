@@ -36,4 +36,9 @@ urlpatterns = [
         description_delete,
         name ='description_delete'
     ),
+    path(
+        'problem/<int:problem_id>/<slug:lang>/edit',
+        description_edit,
+        name ='description_edit'
+    )
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

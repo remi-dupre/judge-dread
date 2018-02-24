@@ -1,0 +1,89 @@
+{% extends 'navbar.html' %}
+
+{% load lang %}
+{% load bootstrap4 %}
+
+{% block content %}
+  <div class="jumbotron">
+    <div class="container">
+      <h1>{{ problem.name }} - {{ language | lang_full_name }}</h1>
+      <p>
+        Edit the description of your problem.
+      </p>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="edit-tab" data-toggle="tab" href="#edit" role="tab" aria-controls="edit" aria-selected="true">
+          Edit
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="preview-tab" data-toggle="tab" href="#preview" role="tab" aria-controls="preview" aria-selected="false">
+          Preview
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <br />
+      <!-- Edit -->
+      <div class="tab-pane fade show active container" id="edit" role="tabpanel" aria-labelledby="edit-tab">
+        <!-- Main content form -->
+        <p>
+          <h3>Edit description</h3>
+          <form action="" method="post" class="form">
+            {% csrf_token %}
+            {% bootstrap_form description_form %}
+            {% buttons %}
+            <button type="submit" class="btn btn-primary">Submit</button>
+            {% endbuttons %}
+          </form>
+        </p>
+
+        <!-- Attachment list -->
+        <p>
+          <h3>Attachments</h3>
+          <div class="table-responsive-md">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col-sm-1">#</th>
+                  <th scope="col-sm-2">name</th>
+                  <th scope="col-sm-8">description</th>
+                  <th scope="col-sm-1"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for attachment in attachments %}
+                  <tr>
+                    <td><img src="{{ attachment.file.url }}" style="height:1em" /></td>
+                    <td>{{ attachment.name }}</td>
+                    <td>{{ attachment.description }}</td>
+                    <td>
+                      <a class="btn btn-sm btn-primary float-right" href="#">modify</a>
+                      <a class="btn btn-sm btn-danger float-right mr-1" href="#">delete</a>
+                    </td>
+                  </tr>
+                {% endfor %}
+                <tr>
+                  <td style="text-align:center" colspan="4">
+                    <a class="btn" href="">+ Upload a new attachment</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </p>
+      </div>
+
+      <!-- Preview -->
+      <div class="tab-pane fade show" id="preview" role="tabpanel" aria-labelledby="preview-tab">
+        Not available yet
+      </div>
+    </div>
+  </div>
+{% endblock %}

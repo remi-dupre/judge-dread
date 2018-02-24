@@ -1,4 +1,7 @@
 {% extends 'navbar.html' %}
+
+{% load lang %}
+
 {% block content %}
   <div class="jumbotron">
     <div class="container">
@@ -11,7 +14,7 @@
 
   <div class="container">
     <!-- Main tabs -->
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <ul class="nav nav-tabs" role="tablist">
       <li class="nav-item">
         <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Overview</a>
       </li>
@@ -26,7 +29,7 @@
     <div class="tab-content" id="problem-descriptions-tab">
       <!-- Overview -->
       <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-        Some general informations about the problem  
+        Some general informations about the problem
       </div>
 
       <!-- Descriptions -->
@@ -40,8 +43,17 @@
               Add a new description
             </button>
             <div class="dropdown-menu" aria-labelledby="add-desc-drop">
-              <a class="dropdown-item disabled" role="button" aria-disabled="true" href="#">fr - French</a>
-              <a class="dropdown-item" href="#">en - English</a>
+              {% for lang in available_languages %}
+                {% if lang not in description_languages %}
+                  <a class="dropdown-item" href="#">
+                    {{ lang }} - {{ lang | lang_full_name }}
+                  </a>
+                {% else %}
+                  <span class="dropdown-item false-disabled-link" title="A description is already available for this language.">
+                    {{ lang }} - {{ lang | lang_full_name }}
+                  </span>
+                {% endif %}
+              {% endfor %}
             </div>
           </div>
         </div>
@@ -52,7 +64,7 @@
             <div class="col-lg-6 description-container">
               <div class="card description">
                 <div class="card-header">
-                  Lang_FullName - {{ description.language }}
+                  {{ description.language | lang_full_name }} - {{ description.language }}
                   <a class="float-right btn btn-sm btn-success" href="#">edit</a>
                   <a class="float-right btn btn-sm btn-danger" href="{% url "description_delete" problem_id=problem.id lang=description.language %}">
                     delete

@@ -3,8 +3,9 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 from django.template.loader import get_template
 
-from .forms import ProblemForm, SubmissionForm
-from .models import Problem, ProblemDescription, Submission
+from .forms import ProblemForm, SubmissionForm, DescriptionForm
+from .models import *
+
 
 def home(request):
     """
@@ -52,22 +53,50 @@ def problem_display(request, problem_id):
         }
         return HttpResponse(template.render(context, request))
 
-
 def problem_admin(request, problem_id):
     try:
         problem = Problem.objects.get(pk=problem_id)
-        descriptions = ProblemDescription.objects.filter(problem=problem_id)
+        descriptions = ProblemDescription.objects.filter(
+            problem = problem_id
+        )
     except Problem.DoesNotExist:
         raise Http404('Problem does not exist')
 
     template = get_template("problem-admin.html")
     context = {
         'descriptions': descriptions,
-        'problem': problem
+        'problem': problem,
+        'available_languages': settings.LANGUAGES.keys(),
+        'description_languages':
+            [description.language for description in descriptions]
     }
 
     return HttpResponse(template.render(context, request))
 
+def description_edit(request, problem_id, lang):
+    try:
+        description = ProblemDescription.objects.get(
+            problem = problem_id,
+            language = lang
+        )
+        attachments = Attachment.objects.filter(
+            problem_description = description
+        )
+    except ProblemDescription.DoesNotExist:
+        raise Http404('Description does not exist')
+
+    print(description)
+    print(attachments)
+
+    template = get_template("description-edit.html")
+    context = {
+        'description': description,
+        'problem': description.problem,
+        'language': lang,
+        'attachments': attachments,
+        'description_form': DescriptionForm(instance=description),
+    }
+    return HttpResponse(template.render(context, request))
 
 def description_delete(request, problem_id, lang):
     try:

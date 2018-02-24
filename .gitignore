@@ -10,3 +10,6 @@ judge_dread.egg-info
 
 # Django migrations
 migrations
+
+# atom-remote's config
+.ftpconfig

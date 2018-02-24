@@ -1,5 +1,6 @@
 from django import forms
 
+from .models import ProblemDescription
 from .models import PROGRAMMING_LANG_CHOICE, LANG_CHOICES
 
 
@@ -25,3 +26,9 @@ class SubmissionForm(forms.Form):
     		raise forms.ValidationError("Choose between a text and a file to drop.")
     	if not code and not file:
     		raise forms.ValidationError("You need to drop a file or a text to submit.")
+
+
+class DescriptionForm(forms.ModelForm):
+    class Meta:
+        model = ProblemDescription
+        fields = ['name', 'content']
