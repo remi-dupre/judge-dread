@@ -1,6 +1,5 @@
 import re
 
-from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -214,7 +213,7 @@ class Submission(models.Model):
 
     # Extra informations about the submission
     date = models.DateTimeField(auto_now_add=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def status(self):
         """

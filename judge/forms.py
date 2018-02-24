@@ -9,3 +9,19 @@ class ProblemForm(forms.Form):
     description = forms.CharField(widget=forms.Textarea)
     soluce_language = forms.ChoiceField(choices=PROGRAMMING_LANG_CHOICE)
     soluce_code = forms.CharField(widget=forms.Textarea)
+
+
+class SubmissionForm(forms.Form):
+    language = forms.ChoiceField(choices=PROGRAMMING_LANG_CHOICE)
+    code = forms.CharField(widget=forms.Textarea, required=False)
+    file = forms.FileField(allow_empty_file=True, required=False)
+
+    def clean(self):
+    	code = self.cleaned_data.get('code')
+    	file = self.cleaned_data.get('file')
+    	print(file)
+
+    	if code and file:
+    		raise forms.ValidationError("Choose between a text and a file to drop.")
+    	if not code and not file:
+    		raise forms.ValidationError("You need to drop a file or a text to submit.")
