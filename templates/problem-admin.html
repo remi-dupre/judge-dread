@@ -48,36 +48,25 @@
         <br/>
 
         <div class="row">
-          <div class="col-lg-6 description-container">
-            <div class="card description">
-              <div class="card-header">
-                Français - {{ problem_description.language }}
-                <a class="float-right btn btn-sm btn-success" href="#">edit</a>
-                <a class="float-right btn btn-sm btn-danger" href="#">delete</a>
-              </div>
-              <div class="card-body">
-                <h1 class="card-title">{{ problem_description.name }}</h1>
-                <div class="card-text problem-description">
-                  {{ problem_description.content_as_html | safe }}
+          {% for description in descriptions %}
+            <div class="col-lg-6 description-container">
+              <div class="card description">
+                <div class="card-header">
+                  Lang_FullName - {{ description.language }}
+                  <a class="float-right btn btn-sm btn-success" href="#">edit</a>
+                  <a class="float-right btn btn-sm btn-danger" href="{% url "description_delete" problem_id=problem.id lang=description.language %}">
+                    delete
+                  </a>
+                </div>
+                <div class="card-body">
+                  <h1 class="card-title">{{ description.name }}</h1>
+                  <div class="card-text problem-description">
+                    {{ description.content_as_html | safe }}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="col-lg-6 description-container">
-            <div class="card description">
-              <div class="card-header">
-                Français - {{ problem_description.language }}
-                <a class="float-right btn btn-sm btn-success" href="#">edit</a>
-                <a class="float-right btn btn-sm btn-danger" href="#">delete</a>
-              </div>
-              <div class="card-body">
-                <h1 class="card-title">{{ problem_description.name }}</h1>
-                <div class="card-text problem-description">
-                  {{ problem_description.content_as_html | safe }}
-                </div>
-              </div>
-            </div>
-          </div>
+          {% endfor %}
         </div>
       </div>
 

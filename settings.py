@@ -15,6 +15,7 @@ import os
 # Load submodules settings
 
 from camisole.settings import *
+from judge.settings import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

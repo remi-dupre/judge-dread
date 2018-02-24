@@ -24,7 +24,16 @@ from judge.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', home),
-    path('problem/<int:problem_id>/', problem_display),
-    path('problem/<int:problem_id>/edit', problem_admin),
     path('creation/', creation),
+    path('problem/<int:problem_id>/', problem_display),
+    path(
+        'problem/<int:problem_id>/edit',
+        problem_admin,
+        name = 'problem_admin'
+    ),
+    path(
+        'problem/<int:problem_id>/<slug:lang>/delete',
+        description_delete,
+        name ='description_delete'
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
