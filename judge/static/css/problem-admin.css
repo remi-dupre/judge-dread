@@ -1,0 +1,19 @@
+/**
+ * Additional style for the problem administration page.
+ */
+
+#problem-descriptions-tab .description-container {
+    padding: 15px;
+}
+
+#problem-descriptions-tab .card {
+    height: 500px;
+}
+
+#problem-descriptions-tab .description .card-body {
+    overflow-y: auto;
+}
+
+#problem-descriptions-tab .card .card-header .btn-sm {
+    margin: -3px 0px -3px 5px;
+}

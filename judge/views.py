@@ -26,6 +26,19 @@ def problem_display(request, problem_id):
     }
     return HttpResponse(template.render(context, request))
 
+def problem_admin(request, problem_id):
+    try:
+        problem_description = ProblemDescription.objects.get(pk=problem_id)
+    except ProblemDescription.DoesNotExist:
+        raise Http404('Problem does not exist')
+
+    template = get_template("problem-admin.html")
+    context = {
+        'problem_description': problem_description,
+        'problem': problem_description.problem
+    }
+    return HttpResponse(template.render(context, request))
+
 def creation(request):
     """"
     Display a form to create a new task.

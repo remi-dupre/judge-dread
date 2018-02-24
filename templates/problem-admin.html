@@ -1,0 +1,158 @@
+{% extends 'navbar.html' %}
+{% block content %}
+  <div class="jumbotron">
+    <div class="container">
+      <h1>{{ problem.name }}</h1>
+      <p>
+        Problem administration page.
+      </p>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Main tabs -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Overview</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" id="descriptions-tab" data-toggle="tab" href="#descriptions" role="tab" aria-controls="descriptions" aria-selected="true">Descriptions</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="testcases-tab" data-toggle="tab" href="#testcases" role="tab" aria-controls="testcases" aria-selected="false">Test Cases</a>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="problem-descriptions-tab">
+      <!-- Overview -->
+      <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+        Some general informations about the problem  
+      </div>
+
+      <!-- Descriptions -->
+      <div class="tab-pane fade show active" id="descriptions" role="tabpanel" aria-labelledby="descriptions-tab">
+        <div class="container">
+          <p>
+            <br/>Here is the list of available descriptions.
+          </p>
+          <div class="btn-group" role="group">
+            <button id="add-desc-drop" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Add a new description
+            </button>
+            <div class="dropdown-menu" aria-labelledby="add-desc-drop">
+              <a class="dropdown-item disabled" role="button" aria-disabled="true" href="#">fr - French</a>
+              <a class="dropdown-item" href="#">en - English</a>
+            </div>
+          </div>
+        </div>
+        <br/>
+
+        <div class="row">
+          <div class="col-lg-6 description-container">
+            <div class="card description">
+              <div class="card-header">
+                Français - {{ problem_description.language }}
+                <a class="float-right btn btn-sm btn-success" href="#">edit</a>
+                <a class="float-right btn btn-sm btn-danger" href="#">delete</a>
+              </div>
+              <div class="card-body">
+                <h1 class="card-title">{{ problem_description.name }}</h1>
+                <div class="card-text problem-description">
+                  {{ problem_description.content_as_html | safe }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 description-container">
+            <div class="card description">
+              <div class="card-header">
+                Français - {{ problem_description.language }}
+                <a class="float-right btn btn-sm btn-success" href="#">edit</a>
+                <a class="float-right btn btn-sm btn-danger" href="#">delete</a>
+              </div>
+              <div class="card-body">
+                <h1 class="card-title">{{ problem_description.name }}</h1>
+                <div class="card-text problem-description">
+                  {{ problem_description.content_as_html | safe }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Test Cases -->
+      <div class="tab-pane fade" id="testcases" role="tabpanel" aria-labelledby="testcases-tab">
+        <br />
+
+
+        <form>
+          <div class="row">
+            <div class="col-md-6">
+              <textarea class="form-control" style="width:100%">
+1
+2 1
+              </textarea>
+            </div>
+            <div class="col-md-6">
+              <textarea class="form-control" style="width:100%">
+1
+2 1
+              </textarea>
+            </div>
+          </div>
+          <div class="form-group row" style="margin-top: 10px">
+            <label for="colFormLabel" class="col-sm-1 col-form-label">Order</label>
+            <div class="col-sm-1">
+              <input type="number" class="form-control" placeholder="First name">
+            </div>
+            <div class="col-sm-6"></div>
+            <div class="col-sm-2">
+              <button class=" btn btn-danger" style="width: 100%">Remove</button>
+            </div>
+            <div class="col-sm-2">
+              <button class=" btn btn-primary" style="width: 100%">Modify</button>
+            </div>
+          </div>
+        </form>
+        <hr />
+        <form>
+          <div class="row">
+            <div class="col-md-6">
+              <textarea class="form-control" style="width:100%">
+1
+2 1
+              </textarea>
+            </div>
+            <div class="col-md-6">
+              <textarea class="form-control" style="width:100%">
+1
+2 1
+              </textarea>
+            </div>
+          </div>
+          <div class="form-group row" style="margin-top: 10px">
+            <label for="colFormLabel" class="col-sm-1 col-form-label">Order</label>
+            <div class="col-sm-1">
+              <input type="number" class="form-control" placeholder="First name">
+            </div>
+            <div class="col-sm-6"></div>
+            <div class="col-sm-2">
+              <button class=" btn btn-danger" style="width: 100%">Remove</button>
+            </div>
+            <div class="col-sm-2">
+              <button class=" btn btn-primary" style="width: 100%">Modify</button>
+            </div>
+          </div>
+        </form>
+        <hr />
+        <button class="btn btn-success">Add a testcase</button>
+      </div>
+    </div>
+
+    <br />
+    <br />
+    <br />
+
+  </div>
+{% endblock %}
