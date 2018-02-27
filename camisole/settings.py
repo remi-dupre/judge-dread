@@ -2,8 +2,6 @@
 Configuration camisole
 """
 
-# Camisole configuration
-
 CAMISOLE_URL = 'http://whoping.fr'
 
 CAMISOLE_PORT = 1111
