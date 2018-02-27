@@ -3,15 +3,15 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 from django.template.loader import get_template
 
-from .forms import ProblemForm, SubmissionForm, DescriptionForm
+from .forms import *
 from .models import *
 
 
 def home(request):
-    """
+    '''
     Main page.
-    """
-    template = get_template("home.html")
+    '''
+    template = get_template('home.html')
     return HttpResponse(template.render({},request))
 
 def problem_display(request, problem_id):
@@ -29,7 +29,6 @@ def problem_display(request, problem_id):
     # Save form datas and redirect to main page
     if form.is_valid():
         if form.data['code']:
-            print("pouet")
             sub = Submission(
                 language = form.cleaned_data['language'],
                 code = form.cleaned_data['code'],
@@ -45,7 +44,7 @@ def problem_display(request, problem_id):
         return redirect(home)
 
     else:
-        template = get_template("problem.html")
+        template = get_template('problem.html')
         context = {
             'form': form,
             'problem_description': problem_description,
@@ -62,7 +61,7 @@ def problem_admin(request, problem_id):
     except Problem.DoesNotExist:
         raise Http404('Problem does not exist')
 
-    template = get_template("problem-admin.html")
+    template = get_template('problem-admin.html')
     context = {
         'descriptions': descriptions,
         'problem': problem,
@@ -85,18 +84,52 @@ def description_edit(request, problem_id, lang):
     except ProblemDescription.DoesNotExist:
         raise Http404('Description does not exist')
 
-    print(description)
-    print(attachments)
+    # Description form
+    if request.method == 'POST' and 'save-description' in request.POST:
+        description_form = DescriptionForm(
+            request.POST,
+            instance = description
+        )
+        description_form.save()
+    else:
+        description_form = DescriptionForm(instance=description)
 
-    template = get_template("description-edit.html")
+    # New attachment form
+    if request.method == 'POST' and 'upload-attachment' in request.POST:
+        new_attachment = Attachment(problem_description=description)
+        new_attachment_form = AttachmentForm(request.POST, request.FILES, instance=new_attachment)
+
+        if new_attachment_form.is_valid():
+            new_attachment_form.save()
+            new_attachment_form = AttachmentForm()
+    else:
+        new_attachment_form = AttachmentForm()
+
+    template = get_template('description-edit.html')
     context = {
         'description': description,
         'problem': description.problem,
         'language': lang,
         'attachments': attachments,
-        'description_form': DescriptionForm(instance=description),
+        'description_form': description_form,
+        'add_attachment_form': new_attachment_form
     }
     return HttpResponse(template.render(context, request))
+
+def attachment_delete(request, attachment_id):
+    try:
+        attachment = Attachment.objects.get(id=attachment_id)
+        http_response = redirect(
+            'description_edit',
+            problem_id = attachment.problem_description.problem.id,
+            lang = attachment.problem_description.language
+        )
+        attachment.delete()
+        return http_response
+    except Attachment.DoesNotExist:
+        return HttpResponse(
+            Http404('This attachment doesn\'t exist')
+        )
 
 def description_delete(request, problem_id, lang):
     try:
@@ -110,12 +143,11 @@ def description_delete(request, problem_id, lang):
     description.delete()
     return redirect('problem_admin', problem_id=problem_id)
 
-
 def creation(request):
-    """"
+    ''''
     Display a form to create a new task.
     If the form is filled, create the new problem and returns.
-    """
+    '''
     # Recover form datas
     if request.method == 'POST':
         form = ProblemForm(request.POST, request.FILES)

@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import ProblemDescription
+from .models import ProblemDescription, Attachment
 from .models import PROGRAMMING_LANG_CHOICE, LANG_CHOICES
 
 
@@ -20,7 +20,6 @@ class SubmissionForm(forms.Form):
     def clean(self):
     	code = self.cleaned_data.get('code')
     	file = self.cleaned_data.get('file')
-    	print(file)
 
     	if code and file:
     		raise forms.ValidationError("Choose between a text and a file to drop.")
@@ -32,3 +31,9 @@ class DescriptionForm(forms.ModelForm):
     class Meta:
         model = ProblemDescription
         fields = ['name', 'content']
+
+
+class AttachmentForm(forms.ModelForm):
+    class Meta:
+        model = Attachment
+        fields = ['name', 'description', 'file']

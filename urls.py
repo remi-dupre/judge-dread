@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', home),
     path('creation/', creation),
+    # Problems views
     path('problem/<int:problem_id>/', problem_display),
     path(
         'problem/<int:problem_id>/edit',
@@ -40,5 +41,11 @@ urlpatterns = [
         'problem/<int:problem_id>/<slug:lang>/edit',
         description_edit,
         name ='description_edit'
+    ),
+    # Attachments views
+    path(
+        'attachment/<int:attachment_id>',
+        attachment_delete,
+        name = 'attachment_delete'
     )
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

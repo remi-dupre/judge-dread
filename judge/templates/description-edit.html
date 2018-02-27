@@ -39,7 +39,7 @@
             {% csrf_token %}
             {% bootstrap_form description_form %}
             {% buttons %}
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary" name="save-description">Save change</button>
             {% endbuttons %}
           </form>
         </p>
@@ -65,13 +65,39 @@
                     <td>{{ attachment.description }}</td>
                     <td>
                       <a class="btn btn-sm btn-primary float-right" href="#">modify</a>
-                      <a class="btn btn-sm btn-danger float-right mr-1" href="#">delete</a>
+                      <a class="btn btn-sm btn-danger float-right mr-1" href="{% url 'attachment_delete' attachment_id=attachment.id %}">delete</a>
                     </td>
                   </tr>
                 {% endfor %}
                 <tr>
                   <td style="text-align:center" colspan="4">
-                    <a class="btn" href="">+ Upload a new attachment</a>
+                    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#add-attachment-modal">+ Upload a new attachment</button>
+                    <div class="modal fade" id="add-attachment-modal" tabindex="-1" role="dialog" aria-labelledby="add-attachment-label" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="add-attachment-label">Upload a new attachment</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <form action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                              <div class="form">
+                                {% bootstrap_form add_attachment_form layout='horizontal' %}
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              {% buttons %}
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" name="upload-attachment" class="btn btn-primary">Upload</button>
+                              {% endbuttons %}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </td>
                 </tr>
               </tbody>
