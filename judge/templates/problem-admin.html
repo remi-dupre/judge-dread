@@ -65,7 +65,7 @@
               <div class="card description">
                 <div class="card-header">
                   {{ description.language | lang_full_name }} - {{ description.language }}
-                  <a class="float-right btn btn-sm btn-success" href="#">edit</a>
+                  <a class="float-right btn btn-sm btn-success" href="{% url "description_edit" problem_id=problem.id lang=description.language %}">edit</a>
                   <a class="float-right btn btn-sm btn-danger" href="{% url "description_delete" problem_id=problem.id lang=description.language %}">
                     delete
                   </a>
