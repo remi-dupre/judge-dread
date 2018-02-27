@@ -1,6 +1,7 @@
 {% extends 'navbar.html' %}
 
-{% load lang %}
+{% load bootstrap4 %}
+{% load lang       %}
 
 {% block content %}
   <div class="jumbotron">
@@ -95,11 +96,48 @@
               <pre class="output">{{ testcase.output }}</pre>
             </div>
             <div class="col-sm-12">
-              <button class="btn btn-sm btn-danger float-right">Remove</button>
-              <button class="btn btn-sm btn-primary float-right mr-1">Modify</button>
+              <a class="btn btn-sm btn-danger float-right" href="{% url "testcase_delete" testcase_id=testcase.id %}">
+                Remove
+              </a>
+              <button class="btn btn-sm btn-primary float-right mr-1" disabled>
+                Modify
+              </button>
             </div>
           </div>
         {% endfor %}
+
+        <div class="text-center">
+          <button class="btn btn-link text-center" data-toggle="modal" data-target="#add-testcase-modal">
+            + Add a new testcase
+          </button>
+          <!-- Add testcase modal -->
+          <div class="modal fade" id="add-testcase-modal" tabindex="-1" role="dialog" aria-labelledby="add-testcase-label" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="add-testcase-label">Upload a new attachment</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <form action="#testcases-tab" method="post">
+                  {% csrf_token %}
+                  <div class="modal-body">
+                    <div class="form">
+                      {% bootstrap_form add_testcase_form layout='horizontal' %}
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    {% buttons %}
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="submit" name="add-testcase" class="btn btn-primary">Add testcase</button>
+                    {% endbuttons %}
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 

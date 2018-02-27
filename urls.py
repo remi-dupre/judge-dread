@@ -32,6 +32,13 @@ urlpatterns = [
         problem_admin,
         name = 'problem_admin'
     ),
+    # Editition of testcases
+    path(
+        'testcase/<int:testcase_id>/delete',
+        testcase_delete,
+        name = 'testcase_delete'
+    ),
+    # Edition of descriptions
     path(
         'problem/<int:problem_id>/<slug:lang>/delete',
         description_delete,

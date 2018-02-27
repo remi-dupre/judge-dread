@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import ProblemDescription, Attachment
+from .models import ProblemDescription, Attachment, TestCase
 from .models import PROGRAMMING_LANG_CHOICE, LANG_CHOICES
 
 
@@ -31,6 +31,12 @@ class DescriptionForm(forms.ModelForm):
     class Meta:
         model = ProblemDescription
         fields = ['name', 'content']
+
+
+class TestCaseForm(forms.ModelForm):
+    class Meta:
+        model = TestCase
+        fields = ['input', 'output']
 
 
 class AttachmentForm(forms.ModelForm):

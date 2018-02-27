@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.urls import reverse
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 from django.template.loader import get_template
@@ -62,6 +63,20 @@ def problem_admin(request, problem_id):
     except Problem.DoesNotExist:
         raise Http404('Problem does not exist')
 
+    testcase_default = TestCase(
+        problem_id = problem_id,
+        input = '',
+        output = '',
+        order = 42
+    )
+    if request.method == 'POST':
+        add_testcase_form = TestCaseForm(
+            request.POST,
+            instance = testcase_default
+        )
+    else:
+        add_testcase_form = TestCaseForm(instance=testcase_default)
+
     template = get_template('problem-admin.html')
     context = {
         'descriptions': descriptions,
@@ -70,9 +85,27 @@ def problem_admin(request, problem_id):
         'description_languages':
             [description.language for description in descriptions],
         'testcases': testcases,
+        'add_testcase_form': add_testcase_form,
     }
 
-    return HttpResponse(template.render(context, request))
+    if request.method == 'POST':
+        add_testcase_form.save()
+        return HttpResponse(template.render(context, request))
+    else:
+        return HttpResponse(template.render(context, request))
+
+def testcase_delete(request, testcase_id):
+    try:
+        testcase = TestCase.objects.get(pk=testcase_id)
+        testcase.delete()
+    except testcase.DoesNotExist:
+        raise Http404('Test case does not exist')
+
+    return redirect(
+        reverse('problem_admin', kwargs={
+            'problem_id': testcase.problem.id
+        }) + '#testcases-tab'
+    )
 
 def description_edit(request, problem_id, lang):
     try:
