@@ -1,0 +1,57 @@
+/**
+ * Some tools to render problem-specific elements.
+ */
+
+ /* ***** Input / Outputs ***** */
+
+.example {
+     margin-bottom: 5px;
+ }
+
+.example > div {
+     padding-bottom: 5px;
+ }
+
+.example .input {
+    margin: 0px;
+
+    border: #dbdbdb solid 1px;
+    border-radius: 3px;
+
+    background-color: #f5f5f5;
+    padding: 5px;
+    height: 100%;
+}
+
+.example .output {
+    margin: 0px;
+
+    border: #dbdbdb solid 1px;
+    border-radius: 3px;
+
+    background-color: #f5f5f5;
+    padding: 5px;
+    height: 100%;
+}
+
+/* Adding little titles in top of inputs / outputs */
+
+.example .input::before {
+    color: gray;
+
+    font-size: 0.7em;
+    font-weight: bold;
+
+    content: "Input";
+    display: block;
+}
+
+.example .output::before {
+    color: gray;
+
+    font-size: 0.7em;
+    font-weight: bold;
+
+    content: "Output";
+    display: block;
+}

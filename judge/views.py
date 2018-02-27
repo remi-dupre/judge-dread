@@ -58,6 +58,7 @@ def problem_admin(request, problem_id):
         descriptions = ProblemDescription.objects.filter(
             problem = problem_id
         )
+        testcases = TestCase.objects.filter(problem=problem)
     except Problem.DoesNotExist:
         raise Http404('Problem does not exist')
 
@@ -67,7 +68,8 @@ def problem_admin(request, problem_id):
         'problem': problem,
         'available_languages': settings.LANGUAGES.keys(),
         'description_languages':
-            [description.language for description in descriptions]
+            [description.language for description in descriptions],
+        'testcases': testcases,
     }
 
     return HttpResponse(template.render(context, request))
@@ -97,7 +99,10 @@ def description_edit(request, problem_id, lang):
     # New attachment form
     if request.method == 'POST' and 'upload-attachment' in request.POST:
         new_attachment = Attachment(problem_description=description)
-        new_attachment_form = AttachmentForm(request.POST, request.FILES, instance=new_attachment)
+        new_attachment_form = AttachmentForm(
+            request.POST, request.FILES,
+            instance = new_attachment
+        )
 
         if new_attachment_form.is_valid():
             new_attachment_form.save()

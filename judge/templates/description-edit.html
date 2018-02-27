@@ -64,42 +64,15 @@
                     <td>{{ attachment.name }}</td>
                     <td>{{ attachment.description }}</td>
                     <td>
-                      <a class="btn btn-sm btn-primary float-right" href="#">modify</a>
                       <a class="btn btn-sm btn-danger float-right mr-1" href="{% url 'attachment_delete' attachment_id=attachment.id %}">delete</a>
-                      <!-- Modify attachment modal -->
-                      <div class="modal fade" id="edit-attachment-modal-{{ attachment.id }}" tabindex="-1" role="dialog" aria-labelledby="add-attachment-label" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="add-attachment-label">Upload a new attachment</h5>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <form action="" method="post" enctype="multipart/form-data">
-                              {% csrf_token %}
-                              <div class="modal-body">
-                                <div class="form">
-                                  {% bootstrap_form add_attachment_form layout='horizontal' %}
-                                </div>
-                              </div>
-                              <div class="modal-footer">
-                                {% buttons %}
-                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                  <button type="submit" name="upload-attachment" class="btn btn-primary">Upload</button>
-                                {% endbuttons %}
-                              </div>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-
                     </td>
                   </tr>
                 {% endfor %}
                 <tr>
                   <td style="text-align:center" colspan="4">
-                    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#add-attachment-modal">+ Upload a new attachment</button>
+                    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#add-attachment-modal">
+                      + Upload a new attachment
+                    </button>
                     <!-- File upload modal -->
                     <div class="modal fade" id="add-attachment-modal" tabindex="-1" role="dialog" aria-labelledby="add-attachment-label" aria-hidden="true">
                       <div class="modal-dialog" role="document">
@@ -137,7 +110,10 @@
 
       <!-- Preview -->
       <div class="tab-pane fade show" id="preview" role="tabpanel" aria-labelledby="preview-tab">
-        Not available yet
+        <div class="problem-description">
+          <h1>{{ description.name }}</h1>
+          {{ description.content_as_html | safe }}
+        </div>
       </div>
     </div>
   </div>

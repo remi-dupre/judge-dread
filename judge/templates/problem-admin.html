@@ -86,74 +86,25 @@
       <div class="tab-pane fade" id="testcases" role="tabpanel" aria-labelledby="testcases-tab">
         <br />
 
-
-        <form>
-          <div class="row">
-            <div class="col-md-6">
-              <textarea class="form-control" style="width:100%">
-1
-2 1
-              </textarea>
+        {% for testcase in testcases %}
+          <div class="example row">
+            <div class="col-sm-6">
+              <pre class="input">{{ testcase.input }}</pre>
             </div>
-            <div class="col-md-6">
-              <textarea class="form-control" style="width:100%">
-1
-2 1
-              </textarea>
+            <div class="col-sm-6">
+              <pre class="output">{{ testcase.output }}</pre>
+            </div>
+            <div class="col-sm-12">
+              <button class="btn btn-sm btn-danger float-right">Remove</button>
+              <button class="btn btn-sm btn-primary float-right mr-1">Modify</button>
             </div>
           </div>
-          <div class="form-group row" style="margin-top: 10px">
-            <label for="colFormLabel" class="col-sm-1 col-form-label">Order</label>
-            <div class="col-sm-1">
-              <input type="number" class="form-control" placeholder="First name">
-            </div>
-            <div class="col-sm-6"></div>
-            <div class="col-sm-2">
-              <button class=" btn btn-danger" style="width: 100%">Remove</button>
-            </div>
-            <div class="col-sm-2">
-              <button class=" btn btn-primary" style="width: 100%">Modify</button>
-            </div>
-          </div>
-        </form>
-        <hr />
-        <form>
-          <div class="row">
-            <div class="col-md-6">
-              <textarea class="form-control" style="width:100%">
-1
-2 1
-              </textarea>
-            </div>
-            <div class="col-md-6">
-              <textarea class="form-control" style="width:100%">
-1
-2 1
-              </textarea>
-            </div>
-          </div>
-          <div class="form-group row" style="margin-top: 10px">
-            <label for="colFormLabel" class="col-sm-1 col-form-label">Order</label>
-            <div class="col-sm-1">
-              <input type="number" class="form-control" placeholder="First name">
-            </div>
-            <div class="col-sm-6"></div>
-            <div class="col-sm-2">
-              <button class=" btn btn-danger" style="width: 100%">Remove</button>
-            </div>
-            <div class="col-sm-2">
-              <button class=" btn btn-primary" style="width: 100%">Modify</button>
-            </div>
-          </div>
-        </form>
-        <hr />
-        <button class="btn btn-success">Add a testcase</button>
+        {% endfor %}
       </div>
     </div>
 
     <br />
     <br />
     <br />
-
   </div>
 {% endblock %}
